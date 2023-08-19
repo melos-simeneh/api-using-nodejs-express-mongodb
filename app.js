@@ -36,6 +36,21 @@ app.post("/api/v1/tours", (req, res) => {
   });
 });
 
+app.get("/api/v1/tours/:id", (req, res) => {
+  const id = req.params.id;
+  db.query("SELECT * FROM  tours WHERE id=?", id, (err, results) => {
+    if (err)
+      return res
+        .status(500)
+        .json({ status: "error", message: "Failed to get a tour" });
+
+    res.json({
+      status: "success",
+      data: { tour: results },
+    });
+  });
+});
+
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
 });
