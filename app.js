@@ -5,7 +5,6 @@ const app = express();
 
 app.get("/api/v1/tours", (req, res) => {
   db.query("SELECT * FROM tours", (err, results, fields) => {
-    console.log(err);
     if (err)
       return res
         .status(500)
