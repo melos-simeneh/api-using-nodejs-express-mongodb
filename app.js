@@ -38,7 +38,7 @@ app.post("/api/v1/tours", (req, res) => {
 
 app.get("/api/v1/tours/:id", (req, res) => {
   const id = req.params.id;
-  db.query("SELECT * FROM  tours WHERE id=?", id, (err, results) => {
+  db.query("SELECT * FROM  tours WHERE id=?", id, (err, result) => {
     if (err)
       return res
         .status(500)
@@ -46,7 +46,24 @@ app.get("/api/v1/tours/:id", (req, res) => {
 
     res.json({
       status: "success",
-      data: { tour: results },
+      data: { tour: result },
+    });
+  });
+});
+
+app.patch("/api/v1/tours/:id", (req, res) => {
+  const id = req.params.id;
+  const tour = req.body;
+
+  db.query("UPDATE tours SET ? WHERE ?", [tour, id], (err, results) => {
+    if (err)
+      return res
+        .status(500)
+        .json({ status: "error", message: "Failed to update a tour" });
+
+    res.json({
+      status: "success",
+      data: { tour: { id, ...tour } },
     });
   });
 });
