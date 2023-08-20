@@ -2,7 +2,7 @@ const express = require("express");
 const db = require("../db");
 const router = express.Router();
 
-router.get("/api/v1/tours", (req, res) => {
+router.get("/s", (req, res) => {
   db.query("SELECT * FROM tours", (err, results) => {
     if (err)
       return res
@@ -17,7 +17,7 @@ router.get("/api/v1/tours", (req, res) => {
   });
 });
 
-router.post("/api/v1/tours", (req, res) => {
+router.post("/", (req, res) => {
   const tour = req.body;
   db.query("INSERT INTO tours SET ?", tour, (err, results) => {
     if (err)
@@ -33,7 +33,7 @@ router.post("/api/v1/tours", (req, res) => {
   });
 });
 
-router.get("/api/v1/tours/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const id = req.params.id;
   db.query("SELECT * FROM  tours WHERE id=?", id, (err, result) => {
     if (err)
@@ -54,7 +54,7 @@ router.get("/api/v1/tours/:id", (req, res) => {
   });
 });
 
-router.patch("/api/v1/tours/:id", (req, res) => {
+router.patch("/:id", (req, res) => {
   const id = req.params.id;
   const tour = req.body;
   db.query("UPDATE tours SET ? WHERE ?", [tour, { id }], (err, result) => {
@@ -78,7 +78,7 @@ router.patch("/api/v1/tours/:id", (req, res) => {
   });
 });
 
-router.delete("/api/v1/tours/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   const id = req.params.id;
 
   db.query("DELETE FROM tours WHERE ?", { id }, (err, result) => {
@@ -101,3 +101,5 @@ router.delete("/api/v1/tours/:id", (req, res) => {
     });
   });
 });
+
+module.exports = router;
