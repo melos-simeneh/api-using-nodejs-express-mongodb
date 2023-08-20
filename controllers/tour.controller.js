@@ -31,6 +31,18 @@ exports.createTour = (req, res) => {
   });
 };
 
+exports.checkID = (req, res, next, val) => {
+  db.query("SELECT * FROM  tours WHERE id=?", val, (err, result) => {
+    if (result.length === 0)
+      return res.status(400).json({
+        status: "fail",
+        message: `Tour with id ${val} not found`,
+      });
+
+    next();
+  });
+};
+
 exports.getTour = (req, res) => {
   const id = req.params.id;
   db.query("SELECT * FROM  tours WHERE id=?", id, (err, result) => {
@@ -38,12 +50,6 @@ exports.getTour = (req, res) => {
       return res
         .status(500)
         .json({ status: "error", message: "Failed to get a tour", error: err });
-
-    if (result.length === 0)
-      return res.status(400).json({
-        status: "fail",
-        message: `Tour with id ${id} not found`,
-      });
 
     res.json({
       status: "success",
@@ -63,18 +69,13 @@ exports.updateTour = (req, res) => {
         error: err,
       });
 
-    if (result.affectedRows === 0)
-      return res.status(400).json({
-        status: "fail",
-        message: `Tour with id ${id} not found`,
-      });
-
     res.json({
       status: "success",
       data: { tour: { id, ...tour } },
     });
   });
 };
+
 exports.deleteTour = (req, res) => {
   const id = req.params.id;
 
@@ -84,12 +85,6 @@ exports.deleteTour = (req, res) => {
         status: "error",
         message: "Failed to delete a tour",
         error: err,
-      });
-
-    if (result.affectedRows === 0)
-      return res.status(400).json({
-        status: "fail",
-        message: `Tour with id ${id} not found`,
       });
 
     res.json({
